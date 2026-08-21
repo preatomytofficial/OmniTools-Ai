@@ -1,0 +1,6 @@
+{
+  "name": "OmniTools AI",
+  "description": "Modular media and document processing suite featuring Image Upscaling, Watermark Removal, Object Eraser, Video to MP3, Video Trimmer, CSV to JSON Converter, PDF Editor Suite, and PDF to EPUB Converter.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
