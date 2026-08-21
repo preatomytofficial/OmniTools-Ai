@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OmniTools AI - Offline AI Tool Suite</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Navigation Header -->
+  <header class="navbar">
+    <div class="nav-container">
+      <div class="brand">
+        <span class="logo-icon">⚡</span>
+        <div class="brand-text">
+          <h1>OmniTools AI</h1>
+          <span class="badge offline-badge">● 100% Offline Engine</span>
+        </div>
+      </div>
+
+      <nav class="nav-links">
+        <a href="index.html" class="nav-link active">Dashboard</a>
+        <a href="#tools" class="nav-link">Tools</a>
+        <a href="#llm-section" class="nav-link">Personal LLM</a>
+        <a href="api.html" class="btn btn-primary api-btn">Get API Key & Modules 🔑</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <main class="main-content">
+    <section class="hero-section">
+      <div class="hero-tag">Air-Gapped & Local Machine Processing</div>
+      <h2 class="hero-title">High-Performance Offline AI & Media Tools</h2>
+      <p class="hero-subtitle">Upscale images, erase watermarks, cut objects, rip video to MP3, and trim footage—driven by a local Personal LLM with zero cloud APIs.</p>
+    </section>
+
+    <!-- Tool Selector Grid -->
+    <section id="tools" class="tools-grid-section">
+      <div class="tools-nav-bar">
+        <button class="tool-tab active" data-tool="upscale">
+          <span class="tab-icon">🔍</span>
+          <span>Image Upscale (RealESRGAN)</span>
+        </button>
+        <button class="tool-tab" data-tool="watermark">
+          <span class="tab-icon">🪄</span>
+          <span>Watermark Remover</span>
+        </button>
+        <button class="tool-tab" data-tool="object">
+          <span class="tab-icon">✂️</span>
+          <span>Object Remover</span>
+        </button>
+        <button class="tool-tab" data-tool="video_mp3">
+          <span class="tab-icon">🎵</span>
+          <span>Video to MP3</span>
+        </button>
+        <button class="tool-tab" data-tool="video_trim">
+          <span class="tab-icon">🎬</span>
+          <span>Video Trim</span>
+        </button>
+      </div>
+
+      <!-- Active Tool Workspace Card -->
+      <div class="workspace-card glassmorphism">
+        <!-- 1. Upscale Panel -->
+        <div class="tool-panel active" id="panel-upscale">
+          <div class="panel-header">
+            <h3>Image Super-Resolution (RealESRGAN 2x / 4x / 8x)</h3>
+            <p>Upscale low-resolution photos using local Lanczos and unsharp contrast filters.</p>
+          </div>
+          
+          <div class="upload-zone" id="upscale-dropzone">
+            <input type="file" id="upscale-file-input" accept="image/*" class="file-input-hidden">
+            <div class="upload-prompt">
+              <span class="upload-icon">📁</span>
+              <p><strong>Click to upload</strong> or drag & drop an image</p>
+              <span class="file-types">PNG, JPG, WEBP (Max 20MB)</span>
+            </div>
+            <div class="preview-container hidden" id="upscale-preview-box">
+              <img id="upscale-preview-img" src="" alt="Preview">
+            </div>
+          </div>
+
+          <div class="tool-controls">
+            <div class="control-group">
+              <label>Upscale Scale Factor:</label>
+              <div class="radio-pills">
+                <label class="pill"><input type="radio" name="upscale-scale" value="2"> 2X</label>
+                <label class="pill"><input type="radio" name="upscale-scale" value="4" checked> 4X (Recommended)</label>
+                <label class="pill"><input type="radio" name="upscale-scale" value="8"> 8X Ultra</label>
+              </div>
+            </div>
+            <button class="btn btn-action" id="btn-process-upscale">Upscale Image Locally</button>
+          </div>
+
+          <!-- Result Area -->
+          <div class="result-area hidden" id="upscale-result-box">
+            <h4>Upscaled Output</h4>
+            <div class="result-display">
+              <img id="upscale-result-img" src="" alt="Upscaled Result">
+            </div>
+            <a id="upscale-download-btn" href="#" download="upscaled.png" class="btn btn-success">Download High-Res Image ⬇️</a>
+          </div>
+        </div>
+
+        <!-- 2. Watermark Remover Panel -->
+        <div class="tool-panel" id="panel-watermark">
+          <div class="panel-header">
+            <h3>Watermark & Logo Remover (OpenCV Inpainting)</h3>
+            <p>Erase watermarks, date stamps, and copyright marks using local texture synthesis.</p>
+          </div>
+
+          <div class="upload-zone" id="watermark-dropzone">
+            <input type="file" id="watermark-file-input" accept="image/*" class="file-input-hidden">
+            <div class="upload-prompt">
+              <span class="upload-icon">🪄</span>
+              <p><strong>Click to select</strong> an image with watermark</p>
+            </div>
+            <div class="canvas-wrapper hidden" id="watermark-canvas-container">
+              <img id="watermark-preview-img" src="" alt="Preview">
+            </div>
+          </div>
+
+          <div class="tool-controls">
+            <div class="coords-row">
+              <label>X: <input type="number" id="wm-x" value="50" class="input-mini"></label>
+              <label>Y: <input type="number" id="wm-y" value="50" class="input-mini"></label>
+              <label>Width: <input type="number" id="wm-w" value="140" class="input-mini"></label>
+              <label>Height: <input type="number" id="wm-h" value="60" class="input-mini"></label>
+            </div>
+            <button class="btn btn-action" id="btn-process-watermark">Remove Watermark</button>
+          </div>
+
+          <div class="result-area hidden" id="watermark-result-box">
+            <h4>Cleaned Image</h4>
+            <img id="watermark-result-img" src="" alt="Cleaned Result">
+            <a id="watermark-download-btn" href="#" download="cleaned.png" class="btn btn-success">Download Cleaned Image ⬇️</a>
+          </div>
+        </div>
+
+        <!-- 3. Object Remover Panel -->
+        <div class="tool-panel" id="panel-object">
+          <div class="panel-header">
+            <h3>Object & Photobomb Eraser</h3>
+            <p>Seamlessly erase unwanted people, items, or objects with local neighborhood inpainting.</p>
+          </div>
+
+          <div class="upload-zone" id="object-dropzone">
+            <input type="file" id="object-file-input" accept="image/*" class="file-input-hidden">
+            <div class="upload-prompt">
+              <span class="upload-icon">✂️</span>
+              <p><strong>Upload image</strong> to erase object</p>
+            </div>
+          </div>
+
+          <div class="tool-controls">
+            <div class="coords-row">
+              <label>X: <input type="number" id="obj-x" value="100" class="input-mini"></label>
+              <label>Y: <input type="number" id="obj-y" value="100" class="input-mini"></label>
+              <label>Width: <input type="number" id="obj-w" value="160" class="input-mini"></label>
+              <label>Height: <input type="number" id="obj-h" value="160" class="input-mini"></label>
+            </div>
+            <button class="btn btn-action" id="btn-process-object">Erase Object</button>
+          </div>
+
+          <div class="result-area hidden" id="object-result-box">
+            <h4>Output Without Object</h4>
+            <img id="object-result-img" src="" alt="Object Erased Result">
+            <a id="object-download-btn" href="#" download="erased.png" class="btn btn-success">Download Erased Image ⬇️</a>
+          </div>
+        </div>
+
+        <!-- 4. Video to MP3 Panel -->
+        <div class="tool-panel" id="panel-video_mp3">
+          <div class="panel-header">
+            <h3>Video to MP3 Converter (FFmpeg Engine)</h3>
+            <p>Rip pure audio tracks from MP4, MKV, MOV, and AVI containers at up to 320kbps.</p>
+          </div>
+
+          <div class="upload-zone" id="video-mp3-dropzone">
+            <input type="file" id="video-mp3-file-input" accept="video/*" class="file-input-hidden">
+            <div class="upload-prompt">
+              <span class="upload-icon">🎵</span>
+              <p><strong>Upload Video File</strong> (MP4, MKV, WEBM, AVI)</p>
+            </div>
+            <p id="video-mp3-filename" class="file-chosen-text"></p>
+          </div>
+
+          <div class="tool-controls">
+            <div class="control-group">
+              <label>Audio Quality (Bitrate):</label>
+              <select id="audio-bitrate-select" class="custom-select">
+                <option value="320k" selected>320 kbps (High Fidelity)</option>
+                <option value="256k">256 kbps (Standard High)</option>
+                <option value="192k">192 kbps (Medium)</option>
+                <option value="128k">128 kbps (Compact)</option>
+              </select>
+            </div>
+            <button class="btn btn-action" id="btn-process-video-mp3">Extract MP3 Audio</button>
+          </div>
+
+          <div class="result-area hidden" id="video-mp3-result-box">
+            <h4>Extracted MP3 Audio</h4>
+            <audio id="audio-player" controls class="audio-control"></audio>
+            <a id="mp3-download-btn" href="#" download="extracted_audio.mp3" class="btn btn-success">Download MP3 File ⬇️</a>
+          </div>
+        </div>
+
+        <!-- 5. Video Trim Panel -->
+        <div class="tool-panel" id="panel-video_trim">
+          <div class="panel-header">
+            <h3>Video Trimmer & Frame-Accurate Cutter</h3>
+            <p>Cut video segments with exact start and end timestamps locally.</p>
+          </div>
+
+          <div class="upload-zone" id="video-trim-dropzone">
+            <input type="file" id="video-trim-file-input" accept="video/*" class="file-input-hidden">
+            <div class="upload-prompt">
+              <span class="upload-icon">🎬</span>
+              <p><strong>Upload Video to Trim</strong> (MP4, MOV, WEBM)</p>
+            </div>
+            <p id="video-trim-filename" class="file-chosen-text"></p>
+          </div>
+
+          <div class="tool-controls">
+            <div class="coords-row">
+              <label>Start (seconds): <input type="number" id="trim-start" value="0.0" step="0.5" class="input-mini"></label>
+              <label>End (seconds): <input type="number" id="trim-end" value="10.0" step="0.5" class="input-mini"></label>
+            </div>
+            <button class="btn btn-action" id="btn-process-video-trim">Trim Video Locally</button>
+          </div>
+
+          <div class="result-area hidden" id="video-trim-result-box">
+            <h4>Trimmed Video Output</h4>
+            <video id="trimmed-video-player" controls class="video-control"></video>
+            <a id="trim-download-btn" href="#" download="trimmed_video.mp4" class="btn btn-success">Download Trimmed Video ⬇️</a>
+          </div>
+        </div>
+
+        <!-- Global Loader Overlay -->
+        <div class="loader-overlay hidden" id="global-loader">
+          <div class="spinner"></div>
+          <p id="loader-status-text">Processing locally with OmniTools AI Engine...</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Personal LLM Section -->
+    <section id="llm-section" class="llm-section">
+      <div class="llm-header">
+        <div class="llm-icon">🧠</div>
+        <div>
+          <h3>Personal LLM Assistant (Offline Core)</h3>
+          <p>Local AI assistant running with zero external API calls. Ask questions, route tools, or configure scripts.</p>
+        </div>
+      </div>
+
+      <div class="llm-chat-card glassmorphism">
+        <div class="chat-messages" id="chat-messages">
+          <div class="message system-message">
+            <strong>OmniLocal AI:</strong> Hello! I am your 100% offline personal LLM assistant. I can guide your image and video transformations or help you deploy our standalone Python modules. How can I help you today?
+          </div>
+        </div>
+
+        <div class="chat-input-row">
+          <input type="text" id="chat-input" placeholder="Ask personal LLM (e.g. 'How do I upscale an image to 4x?', 'Rip audio from video')...">
+          <button id="chat-send-btn" class="btn btn-primary">Send Prompt 🚀</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <p>© 2026 This Tool is Made by PreatomYT</p>
+      <div class="footer-links">
+        <a href="api.html">Download Tool Modules</a>
+        <a href="https://github.com" target="_blank" rel="noreferrer">Local Setup Docs</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
